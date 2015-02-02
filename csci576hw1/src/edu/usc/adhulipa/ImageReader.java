@@ -8,7 +8,7 @@ import javax.swing.*;
 
 public class ImageReader {
 
-	public static byte[] readImageFromFile(String filename) {
+	public static byte[] getImageAsBytes(String filename) {
 		try {
 			File file = new File(filename);
 			InputStream is = new FileInputStream(file);
@@ -31,7 +31,7 @@ public class ImageReader {
 		return null;
 	}
 
-	public static void run(String[] args) {
+	public static void run(String[] args) throws InterruptedException {
 
 		// Read Image
 		String fileName = args[0];
@@ -81,7 +81,6 @@ public class ImageReader {
 			// Use a panel and label to display the image
 			JPanel panel = new JPanel();
 			panel.add(new JLabel(new ImageIcon(img)));
-			panel.add(new JLabel(new ImageIcon(img)));
 
 			JFrame frame = new JFrame("Display images");
 			Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
@@ -89,8 +88,13 @@ public class ImageReader {
 					dim.height / 2 - frame.getSize().height / 2);
 
 			frame.getContentPane().add(panel);
-			frame.pack();
 			frame.setVisible(true);
+			frame.pack();
+
+			panel.add(new JLabel(new ImageIcon(img)));
+			frame.pack();
+			panel.repaint();
+
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		} catch (FileNotFoundException e) {
@@ -98,6 +102,31 @@ public class ImageReader {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+	}
+
+	public static BufferedImage covertToImageFromBytes(int width, int height, int imageType, byte[] bytes) {
+		BufferedImage img = new BufferedImage(width, height, imageType);
+		int ind = 0;
+		for (int y = 0; y < height; y++) {
+
+			for (int x = 0; x < width; x++) {
+
+				byte a = 0;
+				byte red = bytes[ind];
+				byte gr = bytes[ind + height * width];
+				byte bb = bytes[ind + height * width * 2];
+
+				int pix = 0xff000000 | ((red & 0xff) << 16)
+						| ((gr & 0xff) << 8) | (bb & 0xff);
+
+				// int pix = ((a << 24) + (r << 16) + (g << 8) + b);
+				img.setRGB(x, y, pix);
+				ind++;
+			}
+		}
+		return img;
+		
 
 	}
 
