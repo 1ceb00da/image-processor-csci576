@@ -13,11 +13,23 @@ public class Main {
 	private static final int width = 352;
 	private static final int height = 288;
 	
+	
+	public static int[] convertBytesToUnsignedBytes(byte[] bytes) {
+		int[] ubytes = new int[bytes.length];
+		for (int i = 0; i < bytes.length; i++) {
+			ubytes[i] = 0xff0000 & bytes[i];
+		}
+		return ubytes;
+	}
 	public static byte[][] getMatrixFromContiguosBytes(byte[] bytes, int pixelArea) {
+		// convert to unsigned bytes
+		int[] ubytes = convertBytesToUnsignedBytes(bytes);
+		
+		
 		byte[][] RGBMatrix = new byte[3][pixelArea];
-		RGBMatrix[0] = Arrays.copyOfRange(bytes, 0, pixelArea);;
-		RGBMatrix[1] = Arrays.copyOfRange(bytes, pixelArea, pixelArea * 2);;
-		RGBMatrix[2] = Arrays.copyOfRange(bytes, pixelArea * 2, pixelArea * 3);;
+		RGBMatrix[0] = Arrays.copyOfRange(bytes, 0, pixelArea);
+		RGBMatrix[1] = Arrays.copyOfRange(bytes, pixelArea, pixelArea * 2);
+		RGBMatrix[2] = Arrays.copyOfRange(bytes, pixelArea * 2, pixelArea * 3);
 		return RGBMatrix;
 	}
 
@@ -35,7 +47,8 @@ public class Main {
 		for (int row = 0; row < 3; row++) {
 			for (int pixel = 0; pixel < pixelArea; pixel++) {
 				for (int k = 0; k < 3; k++) {
-					YUVMatrix[row][pixel] += RGBToYUVFilter[row][k] * RGBMatrix[k][pixel];
+//					YUVMatrix[row][pixel] += RGBToYUVFilter[row][k] * RGBMatrix[k][pixel];
+					YUVMatrix[row][pixel] += RGBToYUVFilter[row][k] * ((int)RGBMatrix[k][pixel] & 0xff);
 				}
 			}
 		}
@@ -56,7 +69,7 @@ public class Main {
 		for (int row = 0; row < 3; row++) {
 			for (int col = 0; col < pixelArea; col++) {
 				for (int k = 0; k < 3; k++) {
-					RGB[row][col] += Math.round(YUVToRGBFilter[row][k] * YUVMatrix[k][col]);
+					RGB[row][col] += (YUVToRGBFilter[row][k] * YUVMatrix[k][col]);
 				}
 			}
 		}
@@ -67,7 +80,7 @@ public class Main {
 	public static void main(String args[]) throws InterruptedException {
 		
 		String filename = args[0];
-		filename = "Image1.rgb";
+		filename = "Image3.rgb";
 		int Y = Integer.parseInt(args[1]);
 		int U = Integer.parseInt(args[2]);
 		int V = Integer.parseInt(args[3]);
