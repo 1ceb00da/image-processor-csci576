@@ -32,7 +32,6 @@ public class Main {
 		RGBMatrix[2] = Arrays.copyOfRange(bytes, pixelArea * 2, pixelArea * 3);
 		return RGBMatrix;
 	}
-
 	public static float[][] convertFromRGBToYUV(byte[][] RGBMatrix) {
 		int pixelArea = width * height;
 		float[][] YUVMatrix = new float[3][pixelArea];
@@ -48,7 +47,7 @@ public class Main {
 			for (int pixel = 0; pixel < pixelArea; pixel++) {
 				for (int k = 0; k < 3; k++) {
 //					YUVMatrix[row][pixel] += RGBToYUVFilter[row][k] * RGBMatrix[k][pixel];
-					YUVMatrix[row][pixel] += RGBToYUVFilter[row][k] * ((int)RGBMatrix[k][pixel] & 0xff);
+					YUVMatrix[row][pixel] += RGBToYUVFilter[row][k] * ((int)RGBMatrix[k][pixel] & 0xff); // before multiplying RGB value, we need to convert to unsigned byte
 				}
 			}
 		}
@@ -93,11 +92,14 @@ public class Main {
 
 		byte[][] RGBMatrix = getMatrixFromContiguosBytes(bytes, pixelArea);
 		float[][] YUVMatrix = convertFromRGBToYUV(RGBMatrix);
+		YUVImage yuv = new YUVImage(YUVMatrix);
+
+		// Test YUV to RGB conversion
+		//
 		float[][] RGB = convertFromYUVToRGBFloat(YUVMatrix);
-		
 		BufferedImage img = ImageReader.covertToImageFromBytes(width, height, BufferedImage.TYPE_INT_RGB, bytes);
 		
-		
+		// Need to toncvert into bytes (for RGB) from floats (YUV)
 		ByteBuffer b = ByteBuffer.allocate(3 * pixelArea);		
 		int idx = 0;
 		for (int i = 0; i < pixelArea; i++) {
@@ -110,7 +112,6 @@ public class Main {
 			b.put((byte) RGB[2][i]);
 		}
 		byte[] rgbbytes = b.array();
-		
 
 		BufferedImage img2 = ImageReader.covertToImageFromBytes(width, height, BufferedImage.TYPE_INT_RGB, rgbbytes);
 		// end of test
