@@ -14,7 +14,7 @@ public class ADhulipa {
 	private static final int height = 288;
 
 	public static void main(String args[]) throws InterruptedException {
-
+		
 		String filename = args[0];
 		filename = "Image1.rgb";
 		int Y = Integer.parseInt(args[1]);
@@ -61,14 +61,11 @@ public class ADhulipa {
 		
 		
 		// Test rgb to yuv con
-		byte[][] RGB = new byte[3][width * height];
+		float[][] RGB = new float[3][width * height];
 		for (int row = 0; row < 3; row++) {
 			for (int col = 0; col < pixels; col++) {
 				for (int k = 0; k < 3; k++) {
-					RGB[row][col] += YUVToRGBFilter[row][k] * YUVMatrix[k][col];
-				}
-				if (RGBMatrix[row][col] != RGB[row][col]) {
-					RGB[row][col] -= 1;
+					RGB[row][col] += Math.round(YUVToRGBFilter[row][k] * YUVMatrix[k][col]);
 				}
 			}
 		}
@@ -78,13 +75,13 @@ public class ADhulipa {
 		ByteBuffer b = ByteBuffer.allocate(3 * pixels);		
 		int idx = 0;
 		for (int i = 0; i < pixels; i++) {
-			b.put(RGB[0][i]);
+			b.put((byte) RGB[0][i]);
 		}
 		for (int i = 0; i < pixels; i++) {
-			b.put(RGB[1][i]);
+			b.put((byte) RGB[1][i]);
 		}
 		for (int i = 0; i < pixels; i++) {
-			b.put(RGB[2][i]);
+			b.put((byte) RGB[2][i]);
 		}
 		byte[] rgbbytes = b.array();
 		
