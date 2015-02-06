@@ -79,7 +79,7 @@ public class Main {
 	public static void main(String args[]) throws InterruptedException {
 		
 		String filename = args[0];
-		filename = "Image3.rgb";
+		filename = "Image4.rgb";
 		int Y = Integer.parseInt(args[1]);
 		int U = Integer.parseInt(args[2]);
 		int V = Integer.parseInt(args[3]);
