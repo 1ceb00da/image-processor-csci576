@@ -92,11 +92,29 @@ public class Main {
 
 		byte[][] RGBMatrix = getMatrixFromContiguosBytes(bytes, pixelArea);
 		float[][] YUVMatrix = convertFromRGBToYUV(RGBMatrix);
-		YUVImage yuv = new YUVImage(YUVMatrix);
+		YUVImage yuvImage = new YUVImage(YUVMatrix);
 
+		
+		// TODO: complete subsampling  
+		YUVArrays yuvArray = yuvImage.doSubSampling(Y, U, V);
+		
+		// ----------------------- //
+
+		// TODO: adjust for upsampling
+		
+		// ----------------------- //
+		
+		// TODO: convert to rgb space
+		float[][] RGB = convertFromYUVToRGBFloat(YUVMatrix);
+
+		// ----------------------- //
+		
+		// TODO: quantize rgb channels accoring input param Q
+		
+		// ----------------------- //
+		
 		// Test YUV to RGB conversion
 		//
-		float[][] RGB = convertFromYUVToRGBFloat(YUVMatrix);
 		BufferedImage img = ImageReader.covertToImageFromBytes(width, height, BufferedImage.TYPE_INT_RGB, bytes);
 		
 		// Need to toncvert into bytes (for RGB) from floats (YUV)
@@ -120,7 +138,7 @@ public class Main {
 		ViewFrame frame = new ViewFrame("Display Images");
 		frame.addImage(new JLabel(new ImageIcon(img)));
 		frame.addImage(new JLabel(new ImageIcon(img2)));
-		frame.setVisible(true);
+		//frame.setVisible(true);
 
 	}
 }
