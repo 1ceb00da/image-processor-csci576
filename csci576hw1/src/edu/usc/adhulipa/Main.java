@@ -1,6 +1,7 @@
 package edu.usc.adhulipa;
 
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
@@ -76,7 +77,7 @@ public class Main {
 
 	}
 	
-	public static void main(String args[]) throws InterruptedException {
+	public static void main(String args[])  {
 		
 		String filename = args[0];
 		filename = "Image4.rgb";
@@ -86,11 +87,11 @@ public class Main {
 
 		int Q = Integer.parseInt(args[4]);
 
-		byte[] bytes = ImageReader.getImageAsBytes(filename);
+		byte[] originalBytes = ImageReader.getImageAsBytes(filename);
 
 		int pixelArea = width * height;
 
-		byte[][] RGBMatrix = getMatrixFromContiguosBytes(bytes, pixelArea);
+		byte[][] RGBMatrix = getMatrixFromContiguosBytes(originalBytes, pixelArea);
 		float[][] YUVMatrix = convertFromRGBToYUV(RGBMatrix);
 		YUVImage yuvImage = new YUVImage(YUVMatrix);
 
@@ -105,40 +106,57 @@ public class Main {
 		// ----------------------- //
 		
 		// TODO: convert to rgb space
-		float[][] RGB = convertFromYUVToRGBFloat(upSampledYUV);
+		float[][] RGBFloat = convertFromYUVToRGBFloat(upSampledYUV);
 
 		// ----------------------- //
 		
 		// TODO: quantize rgb channels accoring input param Q
-		
+		//quantizeImage(RGBFloat, Q);
 		// ----------------------- //
 		
 		// Test YUV to RGB conversion
 		//
-		BufferedImage img = ImageReader.covertToImageFromBytes(width, height, BufferedImage.TYPE_INT_RGB, bytes);
+		BufferedImage originalImage = ImageReader.covertToImageFromBytes(width, height, BufferedImage.TYPE_INT_RGB, originalBytes);
 		
 		// Need to toncvert into bytes (for RGB) from floats (YUV)
 		ByteBuffer b = ByteBuffer.allocate(3 * pixelArea);		
 		int idx = 0;
 		for (int i = 0; i < pixelArea; i++) {
-			b.put((byte) RGB[0][i]);
+			b.put((byte) RGBFloat[0][i]);
 		}
 		for (int i = 0; i < pixelArea; i++) {
-			b.put((byte) RGB[1][i]);
+			b.put((byte) RGBFloat[1][i]);
 		}
 		for (int i = 0; i < pixelArea; i++) {
-			b.put((byte) RGB[2][i]);
+			b.put((byte) RGBFloat[2][i]);
 		}
-		byte[] rgbbytes = b.array();
+		byte[] postProcessRGBBytes = b.array();
 
-		BufferedImage img2 = ImageReader.covertToImageFromBytes(width, height, BufferedImage.TYPE_INT_RGB, rgbbytes);
+		// TODO: quantize rgb channels accoring input param Q
+		quantizeImage(postProcessRGBBytes, Q);
+		
+		// ----------------------- //
+		BufferedImage img2 = ImageReader.covertToImageFromBytes(width, height, BufferedImage.TYPE_INT_RGB, postProcessRGBBytes);
 		// end of test
 		
 		
 		ViewFrame frame = new ViewFrame("Display Images");
-		frame.addImage(new JLabel(new ImageIcon(img)));
+		frame.addImage(new JLabel(new ImageIcon(originalImage)));
 		frame.addImage(new JLabel(new ImageIcon(img2)));
 		frame.setVisible(true);
 
+	}
+	private static void quantizeImage(byte[] rgbBytes, int q) {
+		
+		for (int i = 0; i < 101000; i+= 1000) {
+			int byteVal = (int)rgbBytes[i] & 0x000000FF;;
+			System.out.println(byteVal);
+		}
+	}
+	private static void quantizeImage(float[][] rgb, int q) {
+		System.out.println("Quatizing....");
+		for (int i = 0; i < 100; i++) {
+			System.out.println(rgb[0][i]);
+		}
 	}
 }

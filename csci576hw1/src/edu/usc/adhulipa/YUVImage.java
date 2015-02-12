@@ -101,6 +101,7 @@ public class YUVImage {
 					next = subSampledYUV.v[index];
 				}
 			} else {
+				
 				vUpSamps[i] = (prev + next) / (float) vFactor;
 			}
 		}
