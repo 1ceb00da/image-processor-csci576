@@ -94,18 +94,18 @@ public class Main {
 		float[][] YUVMatrix = convertFromRGBToYUV(RGBMatrix);
 		YUVImage yuvImage = new YUVImage(YUVMatrix);
 
-		
 		// TODO: complete subsampling  
 		YUVArrays yuvArray = yuvImage.doSubSampling(Y, U, V);
 		
 		// ----------------------- //
 
 		// TODO: adjust for upsampling
+		float[][] upSampledYUV = yuvImage.doUpSampling(yuvArray, Y,  U, V);
 		
 		// ----------------------- //
 		
 		// TODO: convert to rgb space
-		float[][] RGB = convertFromYUVToRGBFloat(YUVMatrix);
+		float[][] RGB = convertFromYUVToRGBFloat(upSampledYUV);
 
 		// ----------------------- //
 		
@@ -138,7 +138,7 @@ public class Main {
 		ViewFrame frame = new ViewFrame("Display Images");
 		frame.addImage(new JLabel(new ImageIcon(img)));
 		frame.addImage(new JLabel(new ImageIcon(img2)));
-		//frame.setVisible(true);
+		frame.setVisible(true);
 
 	}
 }
