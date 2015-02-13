@@ -86,6 +86,8 @@ public class YUVImage {
 		for (int i= 0; i < yUpSamps.length-2; i++) {
 			if (i%vFactor != 0) {
 				yUpSamps[i] = (yUpSamps[i-1]+yUpSamps[i+1])/2;
+				yUpSamps[i] = 
+						Helper.interpolate(i, yUpSamps[i-1], i-1, yUpSamps[i+1], i+1);			
 			}
 		}
 //			// fill neighbors form i - uFact + 1 to i + uFact - 1 with ith value
@@ -111,6 +113,8 @@ public class YUVImage {
 		for (int i= 0; i < uUpSamps.length-2; i++) {
 			if (i%vFactor != 0) {
 				uUpSamps[i] = (uUpSamps[i-1] + uUpSamps[i+1])/2;
+				uUpSamps[i] = 
+						Helper.interpolate(i, uUpSamps[i-1], i-1, uUpSamps[i+1], i+1);
 			}
 		}		
 //			// fill neighbors form i - uFact + 1 to i + uFact - 1 with ith value
@@ -135,7 +139,8 @@ public class YUVImage {
 		for (int i= 0; i < vUpSamps.length-2; i++) {
 			if (i%vFactor != 0) {
 				vUpSamps[i] = (vUpSamps[i-1] + vUpSamps[i+1]) /2;
-			}
+				vUpSamps[i] = 
+						Helper.interpolate(i, vUpSamps[i-1], i-1, vUpSamps[i+1], i+1);			}
 		}
 //			// fill neighbors form i - vFact + 1 to i + vFact - 1 with ith value
 //			int idx = vFactor * i;

@@ -87,8 +87,8 @@ public class Main {
 		int Q = Integer.parseInt(args[4]);
 
 		Y = 1;
-		U = 2;
-		V = 2;
+		U = 1;
+		V = 1;
 		filename = "Image2.rgb";
 
 		byte[] originalBytes = ImageReader.getImageAsBytes(filename);
