@@ -80,12 +80,16 @@ public class Main {
 	public static void main(String args[])  {
 		
 		String filename = args[0];
-		filename = "Image4.rgb";
 		int Y = Integer.parseInt(args[1]);
 		int U = Integer.parseInt(args[2]);
 		int V = Integer.parseInt(args[3]);
 
 		int Q = Integer.parseInt(args[4]);
+
+		Y = 1;
+		U = 2;
+		V = 2;
+		filename = "Image2.rgb";
 
 		byte[] originalBytes = ImageReader.getImageAsBytes(filename);
 
@@ -101,7 +105,7 @@ public class Main {
 		// ----------------------- //
 
 		// TODO: adjust for upsampling
-		float[][] upSampledYUV = yuvImage.doUpSampling(yuvArray, Y,  U, V);
+		float[][] upSampledYUV = yuvImage.doUpSampling2(yuvArray, Y,  U, V);
 		
 		// ----------------------- //
 		
@@ -150,7 +154,7 @@ public class Main {
 		
 		for (int i = 0; i < 101000; i+= 1000) {
 			int byteVal = (int)rgbBytes[i] & 0x000000FF;;
-			System.out.println(byteVal);
+			//System.out.println(byteVal);
 		}
 	}
 	private static void quantizeImage(float[][] rgb, int q) {
