@@ -89,10 +89,6 @@ public class Main {
 
 		int Q = Integer.parseInt(args[4]);
 
-		Y = 5;
-		U = 5;
-		V = 5;
-		Q = 256;
 		filename = "Image1.rgb";
 
 		byte[] originalBytes = ImageReader.getImageAsBytes(filename);
