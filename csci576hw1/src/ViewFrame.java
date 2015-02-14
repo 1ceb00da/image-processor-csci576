@@ -1,4 +1,4 @@
-package edu.usc.adhulipa.view;
+
 
 import java.awt.Component;
 import java.awt.Dimension;
