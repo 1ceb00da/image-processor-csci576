@@ -79,7 +79,7 @@ public class YUVImage {
 		
 		// wokrs fine with all images... makes them pixelated but that's ok
 		for (int i= 0; i < yUpSamps.length; i++) {
-			if (i%vFactor != 0) {
+			if (i%yFactor != 0) {
 				yUpSamps[i] = yUpSamps[i-1];
 			}
 		}
@@ -119,7 +119,7 @@ public class YUVImage {
 			uUpSamps[uFactor * i] = subSampledYUV.u[i];
 		}
 		for (int i= 0; i < uUpSamps.length-2; i++) {
-			if (i%vFactor != 0) {
+			if (i%uFactor != 0) {
 				uUpSamps[i] = (uUpSamps[i-1] + uUpSamps[i+1])/2;
 				uUpSamps[i] = 
 						Helper.interpolate(i, uUpSamps[i-1], i-1, uUpSamps[i+1], i+1);
