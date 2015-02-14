@@ -92,7 +92,7 @@ public class YUVImage {
 			// similarly use other nieghbors for bicubi interpolation
 			// or polynomial interpolation
 			
-			if (i%vFactor != 0) {
+			if (i%yFactor != 0) {
 				yUpSamps[i] = (yUpSamps[i-1]+yUpSamps[i+1])/2;
 				yUpSamps[i] = 
 						Helper.interpolate(i, yUpSamps[i-1], i-1, yUpSamps[i+1], i+1);			
