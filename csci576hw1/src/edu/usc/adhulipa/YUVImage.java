@@ -84,6 +84,14 @@ public class YUVImage {
 			}
 		}
 		for (int i= 0; i < yUpSamps.length-2; i++) {
+			
+			// i -- row*col in image coords
+			// row = i / width (if samps are storesd in row-major order
+			// col = i % width
+			// neigbors of i --- row-1,col; row+1, col -- use for bilinear interpolation
+			// similarly use other nieghbors for bicubi interpolation
+			// or polynomial interpolation
+			
 			if (i%vFactor != 0) {
 				yUpSamps[i] = (yUpSamps[i-1]+yUpSamps[i+1])/2;
 				yUpSamps[i] = 

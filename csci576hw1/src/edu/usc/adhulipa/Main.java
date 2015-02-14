@@ -4,6 +4,9 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -86,10 +89,11 @@ public class Main {
 
 		int Q = Integer.parseInt(args[4]);
 
-		Y = 1;
-		U = 2;
-		V = 2;
-		filename = "Image2.rgb";
+		Y = 5;
+		U = 5;
+		V = 5;
+		Q = 256;
+		filename = "Image1.rgb";
 
 		byte[] originalBytes = ImageReader.getImageAsBytes(filename);
 
@@ -137,7 +141,10 @@ public class Main {
 		byte[] postProcessRGBBytes = b.array();
 
 		// TODO: quantize rgb channels accoring input param Q
-		quantizeImage(postProcessRGBBytes, Q);
+		
+		//System.out.println(Arrays.toString(postProcessRGBBytes));
+		postProcessRGBBytes = quantizeImage(postProcessRGBBytes, Q);
+		//System.out.println(Arrays.toString(postProcessRGBBytes));
 		
 		// ----------------------- //
 		BufferedImage img2 = ImageReader.covertToImageFromBytes(width, height, BufferedImage.TYPE_INT_RGB, postProcessRGBBytes);
@@ -150,7 +157,7 @@ public class Main {
 		frame.setVisible(true);
 
 	}
-	private static void quantizeImage(byte[] rgbBytes, int q) {
+	private static byte[] quantizeImage(byte[] rgbBytes, int q) {
 
 		// idea
 		// 1 singed quantizer
@@ -164,14 +171,28 @@ public class Main {
 		// for each byte x
 		//  Qfn(x) = delta * 
 		//			(floor((abs(x)/delta)) + (1/2))
-				
+		
+		Set<Integer> testSet = new TreeSet<Integer>();
+		
 		System.out.println("Quatizing rgbByteVals....");		
-		for (int i = 0; i < 101000; i+= 1000) {
+		for (int i = 0; i < rgbBytes.length; i++) {
 			int byteVal = (int)rgbBytes[i] & 0x000000FF;
 			double newbyteval = Quantizer.quantizer(byteVal, q, 256);
-			System.out.println("oldVal = " + Byte.toUnsignedInt(rgbBytes[i]) + " vs. newVal = " + ((int)newbyteval & 0x000000ff));
-			//System.out.println(byteVal + " " + rgbBytes.length);
+			testSet.add((new Integer((byte)(int)newbyteval & 0x000000ff)));
+			/*System.out.println(
+					"oldVal = " + ""
+					+ Byte.toUnsignedInt(rgbBytes[i]) + " vs. newVal = " + ""
+					+ ((int)newbyteval & 0x000000ff)
+				);
+			*/
+			// replace rgbByte with new val
+			
+			rgbBytes[i] = (byte)((int)newbyteval & 0x000000ff);
 		}
+		
+		//System.out.println(Arrays.toString(testSet.toArray()));
+		System.out.println("Done quatization!");
+		return rgbBytes;
 	}
 	private static void quantizeImage(float[][] rgb, int q) {
 		//System.out.println("Quatizing rgbFloatVals....");
