@@ -87,8 +87,8 @@ public class Main {
 		int Q = Integer.parseInt(args[4]);
 
 		Y = 1;
-		U = 5;
-		V = 5;
+		U = 2;
+		V = 2;
 		filename = "Image2.rgb";
 
 		byte[] originalBytes = ImageReader.getImageAsBytes(filename);
@@ -151,16 +151,32 @@ public class Main {
 
 	}
 	private static void quantizeImage(byte[] rgbBytes, int q) {
+
+		// idea
+		// 1 singed quantizer
+		// delta = 256/q; 256 orignal possible vals, Q is quantFac form cmd line
+		// for each byte x
+		//  Qfn(x) = sgn(x) * delta * 
+		//			(floor((abs(x)/delta)) + (1/2))
 		
+		// 2 mid-riser quantizer
+		// delta = 256/q; 256 orignal possible vals, Q is quantFac form cmd line
+		// for each byte x
+		//  Qfn(x) = delta * 
+		//			(floor((abs(x)/delta)) + (1/2))
+				
+		System.out.println("Quatizing rgbByteVals....");		
 		for (int i = 0; i < 101000; i+= 1000) {
-			int byteVal = (int)rgbBytes[i] & 0x000000FF;;
-			//System.out.println(byteVal);
+			int byteVal = (int)rgbBytes[i] & 0x000000FF;
+			double newbyteval = Quantizer.quantizer(byteVal, q, 256);
+			System.out.println("oldVal = " + Byte.toUnsignedInt(rgbBytes[i]) + " vs. newVal = " + ((int)newbyteval & 0x000000ff));
+			//System.out.println(byteVal + " " + rgbBytes.length);
 		}
 	}
 	private static void quantizeImage(float[][] rgb, int q) {
-		System.out.println("Quatizing....");
+		//System.out.println("Quatizing rgbFloatVals....");
 		for (int i = 0; i < 100; i++) {
-			System.out.println(rgb[0][i]);
+			//System.out.println(rgb[0][i]);
 		}
 	}
 }
